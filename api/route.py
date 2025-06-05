@@ -37,7 +37,7 @@ def predict(data:PredictionRequest = Body(...)):
             image = background
         image = image.convert("L")
         image = ImageChops.invert(image)
-        image.save("temp_image.png")  # Save for debugging if needed
+        # image.save("temp_image.png")
         pixels = np.array(image, dtype=np.float32).reshape(1, 1, 28, 28) / 255.0
     
     # Perform prediction
@@ -45,6 +45,7 @@ def predict(data:PredictionRequest = Body(...)):
         y = int(np.argmax(prediction[0]))
         return {"prediction": y,"probabilities": softmax(prediction[0]).tolist()}
     except Exception as e:
+        print(f"Error processing image: {e}")
         raise RequestErrorModel(detail=str(e))
 
 if __name__ == "__main__":
